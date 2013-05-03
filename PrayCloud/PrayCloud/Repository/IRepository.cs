@@ -9,6 +9,7 @@ namespace PrayCloud
     {
         void Delete<T>( string id );
         IQueryable<T> Find<T>();
+        IEnumerable<U> MapReduce<T, U>( string map, string reduce );
         T Save<T>( T entity );
     }
 }

@@ -12,5 +12,7 @@ namespace PrayCloud
         [BsonId]
         [BsonRepresentation( BsonType.ObjectId )]
         public string Id { get; set; }
+
+        public List<Message> Messages { get; set; }
     }
 }

@@ -26,7 +26,6 @@ namespace PrayCloud
                 kernel.Bind<IRepository>().ToConstant( new MemoryRepository() );
             }
 
-            kernel.Bind<IMessageHandler>().To<MessageHandler>();
             kernel.Bind<IMappingHandler>().To<AutoMapMappingHandler>();
 
             DependencyResolver.SetResolver( new NinjectMVCDependencyResolver( kernel ) );

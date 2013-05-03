@@ -19,6 +19,11 @@ namespace PrayCloud
             return (IQueryable<T>) this.data.Values.AsQueryable();
         }
 
+        public IEnumerable<U> MapReduce<T, U>( string map, string reduce )
+        {
+            throw new NotImplementedException( "Yeah... memory repo doesn't have map reduce" );
+        }
+
         public T Save<T>( T entity )
         {
             var idProperty = entity.GetType().GetProperty( "Id" );

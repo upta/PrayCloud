@@ -16,8 +16,7 @@ namespace PrayCloud.Tests.Mapping
                 Body = "body",
                 Created = DateTime.MaxValue,
                 Creator = "creator",
-                Id = "12345",
-                Users = new List<string>() { "user", "ids" }
+                Id = "12345"
             };
 
             IEnumerable<Message> messages = new List<Message>() { message };

@@ -28,6 +28,13 @@ namespace PrayCloud
             return this.Collection<T>().AsQueryable<T>();
         }
 
+        public IEnumerable<U> MapReduce<T,U>( string map, string reduce )
+        {
+            var result = this.Collection<T>().MapReduce( new BsonJavaScript( map ), new BsonJavaScript( reduce ) );
+
+            return result.GetResultsAs<U>();
+        }
+
         public T Save<T>( T entity )
         {
             var collection = this.Collection<T>();

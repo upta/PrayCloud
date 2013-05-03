@@ -9,26 +9,36 @@ namespace PrayCloud
 {
     public class MessageController : ApiController
     {
-        private readonly IMessageHandler messageHandler;
+        private readonly IUserHandler userHandler;
         private readonly IMappingHandler mappingHandler;
 
-        public MessageController( IMessageHandler messageHandler, IMappingHandler mappingHandler )
+        public MessageController( IUserHandler userHandler, IMappingHandler mappingHandler )
         {
-            this.messageHandler = messageHandler;
+            this.userHandler = userHandler;
             this.mappingHandler = mappingHandler;
         }
 
         public IEnumerable<MessageDto> Get( string id )
         {
-            var messages = this.messageHandler.GetMessagesForUser( id );
+            if ( !this.userHandler.Exists( id ) )
+            {
+                id = this.userHandler.Create();
+            }
 
-            var result = this.mappingHandler.Map<IEnumerable<MessageDto>>( messages );
+            var user = this.userHandler.GetUserById( id );
+
+            var result = this.mappingHandler.Map<IEnumerable<MessageDto>>( user.Messages );
 
             return result;
         }
 
         public void Post( CreateMessageDto message )
         {
+            if ( !this.userHandler.Exists( message.Creator ) )
+            {
+                message.Creator = this.userHandler.Create();
+            }
+
             // find peeps to assign it to
 
             // assign to peeps
