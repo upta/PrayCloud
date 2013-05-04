@@ -13,6 +13,6 @@ namespace PrayCloud
         [BsonRepresentation( BsonType.ObjectId )]
         public string Id { get; set; }
 
-        public List<Message> Messages { get; set; }
+        public DateTime LastAssigned { get; set; }
     }
 }

@@ -10,11 +10,13 @@ namespace PrayCloud
     public class MessageController : ApiController
     {
         private readonly IUserHandler userHandler;
+        private readonly IMessageHandler messageHandler;
         private readonly IMappingHandler mappingHandler;
 
-        public MessageController( IUserHandler userHandler, IMappingHandler mappingHandler )
+        public MessageController( IUserHandler userHandler, IMessageHandler messageHandler, IMappingHandler mappingHandler )
         {
             this.userHandler = userHandler;
+            this.messageHandler = messageHandler;
             this.mappingHandler = mappingHandler;
         }
 
@@ -25,9 +27,9 @@ namespace PrayCloud
                 id = this.userHandler.Create();
             }
 
-            var user = this.userHandler.GetUserById( id );
+            var messages = this.messageHandler.GetMessagesForUser( id );
 
-            var result = this.mappingHandler.Map<IEnumerable<MessageDto>>( user.Messages );
+            var result = this.mappingHandler.Map<IEnumerable<MessageDto>>( messages );
 
             return result;
         }

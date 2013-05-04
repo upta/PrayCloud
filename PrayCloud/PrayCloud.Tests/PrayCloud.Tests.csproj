@@ -111,6 +111,7 @@
   <ItemGroup>
     <Compile Include="AssertExtensions.cs" />
     <Compile Include="Controllers\MessageControllerTests.cs" />
+    <Compile Include="Handlers\MessageHandlerTests.cs" />
     <Compile Include="Handlers\UserHandlerTests.cs" />
     <Compile Include="Mapping\AutoMapMappingHandlerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

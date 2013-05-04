@@ -15,16 +15,6 @@ namespace PrayCloud
         }
 
 
-        public IEnumerable<string> AssignMessageToUsers( Message message, int maxUsers )
-        {
-            var users = this.repository.Find<User>()
-                                       .Where( a => a.Id != message.Creator )
-                                       .OrderBy( a => a.Messages.Count )
-                                       .Take( maxUsers );
-
-            return users.Select( a => a.Id );
-        }
-
         public string Create()
         {
             var user = new User();

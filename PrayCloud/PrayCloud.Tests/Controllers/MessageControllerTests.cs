@@ -23,7 +23,7 @@ namespace PrayCloud.Tests.Controllers
         }
 
         [TestMethod]
-        public void Get_GetsUser()
+        public void Get_GetsMessagesForUser()
         {
             var id = "12345";
 
@@ -32,14 +32,14 @@ namespace PrayCloud.Tests.Controllers
             userHandler.Setup( a => a.Exists( id ) )
                        .Returns( true );
 
-            userHandler.Setup( a => a.GetUserById( It.IsAny<string>() ) )
-                       .Returns( new User() );
+            var messageHandler = new Mock<IMessageHandler>();
 
-            var controller = this.GetController( userHandler: userHandler );
+            var controller = this.GetController( userHandler: userHandler,
+                                                 messageHandler: messageHandler );
 
             controller.Get( id );
 
-            userHandler.Verify( a => a.GetUserById( id ) );
+            messageHandler.Verify( a => a.GetMessagesForUser( id ) );
         }
 
         [TestMethod]
@@ -58,9 +58,11 @@ namespace PrayCloud.Tests.Controllers
 
 
         private MessageController GetController( Mock<IUserHandler> userHandler = null,
+                                                 Mock<IMessageHandler> messageHandler = null,
                                                  Mock<IMappingHandler> mappingHandler = null )
         {
             return new MessageController( ( userHandler ?? new Mock<IUserHandler>() ).Object,
+                                          ( messageHandler ?? new Mock<IMessageHandler>() ).Object,
                                           ( mappingHandler ?? new Mock<IMappingHandler>() ).Object );
         }
     }
