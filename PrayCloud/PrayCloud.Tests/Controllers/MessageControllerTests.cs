@@ -42,6 +42,7 @@ namespace PrayCloud.Tests.Controllers
             messageHandler.Verify( a => a.GetMessagesForUser( id ) );
         }
 
+
         [TestMethod]
         public void Post_CreatesUserIfDoesntExists()
         {
@@ -54,6 +55,24 @@ namespace PrayCloud.Tests.Controllers
             controller.Post( new CreateMessageDto() );
 
             userHandler.Verify( a => a.Create() );
+        }
+
+        [TestMethod]
+        public void Post_DispatchesMessage()
+        {
+            var id = "12345";
+            var dto = new CreateMessageDto
+            {
+                Creator = id
+            };
+
+            var messageHandler = new Mock<IMessageHandler>();
+
+            var controller = this.GetController( messageHandler: messageHandler );
+
+            controller.Post( dto );
+
+            messageHandler.Verify( a => a.DispatchMessage( It.IsAny<Message>(), It.IsAny<int>() ) );
         }
 
 

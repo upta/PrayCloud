@@ -22,12 +22,26 @@ namespace PrayCloud.Tests.Handlers
                     return a;
                 } );
 
-            var handler = new UserHandler( repo.Object );
+            var handler = new UserHandler( repo.Object, new Mock<IMessageHandler>().Object );
 
             var result = handler.Create();
 
             Assert.IsNotNull( result );
             Assert.AreEqual( id, result );
+        }
+
+        [TestMethod]
+        public void Create_EnsuresUserGetsStartingMessages()
+        {
+            var repo = new Mock<IRepository>();
+
+            var messageHandler = new Mock<IMessageHandler>();
+
+            var handler = new UserHandler( repo.Object, messageHandler.Object );
+
+            handler.Create();
+
+            messageHandler.Verify( a => a.EnsureUserHasMessages( It.IsAny<string>() ) );
         }
 
         [TestMethod]
@@ -37,7 +51,7 @@ namespace PrayCloud.Tests.Handlers
 
             var repo = new Mock<IRepository>();
 
-            var handler = new UserHandler( repo.Object );
+            var handler = new UserHandler( repo.Object, new Mock<IMessageHandler>().Object );
 
             handler.Create();
 
@@ -54,7 +68,7 @@ namespace PrayCloud.Tests.Handlers
             repo.Setup( a => a.Find<User>() )
                 .Returns( new List<User>() { new User { Id = id } }.AsQueryable() );
 
-            var handler = new UserHandler( repo.Object );
+            var handler = new UserHandler( repo.Object, new Mock<IMessageHandler>().Object );
 
             var result = handler.Exists( id );
 
@@ -67,7 +81,7 @@ namespace PrayCloud.Tests.Handlers
         {
             var repo = new Mock<IRepository>();
 
-            var handler = new UserHandler( repo.Object );
+            var handler = new UserHandler( repo.Object, new Mock<IMessageHandler>().Object );
 
             AssertIt.Throws<ArgumentException>( () =>
             {
@@ -84,7 +98,7 @@ namespace PrayCloud.Tests.Handlers
             repo.Setup( a => a.Find<User>() )
                 .Returns( new List<User>() { new User { Id = id } }.AsQueryable() );
 
-            var handler = new UserHandler( repo.Object );
+            var handler = new UserHandler( repo.Object, new Mock<IMessageHandler>().Object );
 
             var result = handler.GetUserById( id );
 

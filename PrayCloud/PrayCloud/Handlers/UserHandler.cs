@@ -8,18 +8,25 @@ namespace PrayCloud
     public class UserHandler : IUserHandler
     {
         private readonly IRepository repository;
+        private readonly IMessageHandler messageHandler;
 
-        public UserHandler( IRepository repository )
+        public UserHandler( IRepository repository, IMessageHandler messageHandler )
         {
             this.repository = repository;
+            this.messageHandler = messageHandler;
         }
 
 
         public string Create()
         {
-            var user = new User();
+            var user = new User
+            {
+                LastAssigned = DateTime.MinValue
+            };
 
             this.repository.Save<User>( user );
+
+            this.messageHandler.EnsureUserHasMessages( user.Id );
 
             return user.Id;
         }

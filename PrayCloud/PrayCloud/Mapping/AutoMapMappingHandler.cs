@@ -13,6 +13,7 @@ namespace PrayCloud
             Mapper.Reset();
 
             Mapper.CreateMap<Message, MessageDto>();
+            Mapper.CreateMap<CreateMessageDto, Message>();
         }
 
         public U Map<U>( object source )

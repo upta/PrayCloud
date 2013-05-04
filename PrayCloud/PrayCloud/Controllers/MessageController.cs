@@ -34,16 +34,16 @@ namespace PrayCloud
             return result;
         }
 
-        public void Post( CreateMessageDto message )
+        public void Post( CreateMessageDto dto )
         {
-            if ( !this.userHandler.Exists( message.Creator ) )
+            if ( !this.userHandler.Exists( dto.Creator ) )
             {
-                message.Creator = this.userHandler.Create();
+                dto.Creator = this.userHandler.Create();
             }
 
-            // find peeps to assign it to
+            var message = this.mappingHandler.Map<Message>( dto );
 
-            // assign to peeps
+            this.messageHandler.DispatchMessage( message, this.messageHandler.CalculateMaxDispatchUsers() );
 
             // notify peeps
         }
