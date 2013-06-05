@@ -20,7 +20,7 @@ namespace PrayCloud
             this.mappingHandler = mappingHandler;
         }
 
-        public IEnumerable<MessageDto> Get( string id )
+        public IEnumerable<MessageDto> Get( string id = null )
         {
             if ( !this.userHandler.Exists( id ) )
             {

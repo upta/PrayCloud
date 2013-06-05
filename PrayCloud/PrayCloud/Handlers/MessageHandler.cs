@@ -27,7 +27,7 @@ namespace PrayCloud
                                        .OrderBy( a => a.LastAssigned )
                                        .Take( maxUsers );
 
-            message.Users = users.Select( a => a.Id ).ToList();
+            message.Users = users.ToList();
             this.repository.Save<Message>( message );
 
             foreach ( var user in users )
@@ -46,9 +46,11 @@ namespace PrayCloud
                                                     .OrderByDescending( a => a.Created )
                                                     .Take( 3 );
 
+                var user = this.repository.Find<User>().Single( a => a.Id == userId );
+
                 foreach ( var message in latestMessages )
                 {
-                    message.Users.Add( userId );
+                    message.Users.Add( user );
 
                     this.repository.Save<Message>( message );
                 }
@@ -58,7 +60,7 @@ namespace PrayCloud
         public IEnumerable<Message> GetMessagesForUser( string id )
         {
             return this.repository.Find<Message>()
-                                  .Where( a => a.Users.Any( b => b == id ) );
+                                  .Where( a => a.Users.Any( b => b.Id == id ) );
         }
     }
 }

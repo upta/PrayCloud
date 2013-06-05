@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 using MongoDB.Bson;
@@ -14,6 +15,7 @@ namespace PrayCloud
         [BsonRepresentation( BsonType.ObjectId )]
         public string Creator { get; set; }
 
+        [Key]
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
@@ -22,6 +24,12 @@ namespace PrayCloud
 
         public string MessageId { get; set; }
         
-        public List<string> Users { get; set; }
+        public virtual List<User> Users { get; set; }
+
+
+        public Message()
+        {
+            this.Id = Guid.NewGuid().ToString();
+        }
     }
 }

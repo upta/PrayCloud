@@ -7,9 +7,8 @@ namespace PrayCloud
 {
     public interface IRepository
     {
-        void Delete<T>( string id );
-        IQueryable<T> Find<T>();
-        IEnumerable<U> MapReduce<T, U>( string map, string reduce );
-        T Save<T>( T entity );
+        void Delete<T>( string id ) where T : class;
+        IQueryable<T> Find<T>() where T : class;
+        T Save<T>( T entity ) where T : class;
     }
 }

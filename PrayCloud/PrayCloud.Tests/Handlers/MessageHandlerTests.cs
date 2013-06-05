@@ -27,25 +27,27 @@ namespace PrayCloud.Tests.Handlers
             var message = new Message
             {
                 Creator = id,
-                Users = new List<string>()
+                Users = new List<User>()
             };
+
+            var minDate = new DateTime( 1753, 1, 1 );
 
             var users =new List<User> 
             { 
                 new User
                 { 
                     Id = id,
-                    LastAssigned = DateTime.MinValue
+                    LastAssigned = minDate
                 },
                 new User
                 { 
                     Id = "newer",
-                    LastAssigned = DateTime.MinValue.AddDays( 1 )
+                    LastAssigned = minDate.AddDays( 1 )
                 },
                 new User
                 { 
                     Id = "older",
-                    LastAssigned = DateTime.MinValue.AddDays( 1 )
+                    LastAssigned = minDate.AddDays( 1 )
                 }
             };
 
@@ -58,7 +60,7 @@ namespace PrayCloud.Tests.Handlers
 
             handler.DispatchMessage( message, 1 );
 
-            CollectionAssert.AreEquivalent( expectedUsers.Select( a => a.Id ).ToList(), message.Users );
+            CollectionAssert.AreEquivalent( expectedUsers.Select( a => a.Id ).ToList(), message.Users.Select( a => a.Id ).ToList() );
             repo.Verify( a => a.Save<Message>( message ) );
         }
 
@@ -69,7 +71,7 @@ namespace PrayCloud.Tests.Handlers
             var message = new Message
             {
                 Creator = id,
-                Users = new List<string>()
+                Users = new List<User>()
             };
 
             var users = new List<User> 
@@ -114,7 +116,7 @@ namespace PrayCloud.Tests.Handlers
             {
                 new Message
                 {
-                    Users = new List<string>() { id }
+                    Users = new List<User>() { new User { Id = id } }
                 }
             };
 
@@ -138,24 +140,27 @@ namespace PrayCloud.Tests.Handlers
                 new Message
                 {
                     Created = DateTime.MaxValue,
-                    Users= new List<string>()
+                    Users= new List<User>()
                 },
                 new Message
                 {
                     Creator = id,
                     Created = DateTime.MaxValue.AddDays( -1 ),
-                    Users= new List<string>()
+                    Users= new List<User>()
                 },
                 new Message
                 {
                     Created = DateTime.MaxValue.AddDays( -2 ),
-                    Users= new List<string>()
+                    Users= new List<User>()
                 }
             };
 
             var repo = new Mock<IRepository>();
             repo.Setup( a => a.Find<Message>() )
                 .Returns( messages.AsQueryable() );
+
+            repo.Setup( a => a.Find<User>() )
+                .Returns( new List<User>() { new User { Id = id } }.AsQueryable() );
 
             var handler = new MessageHandler( repo.Object );
 
@@ -174,15 +179,15 @@ namespace PrayCloud.Tests.Handlers
             {
                 new Message
                 {
-                   Users = new List<string> { "not our user", id }
+                   Users = new List<User> { new User { Id = "not our user" }, new User { Id = id } }
                 },
                 new Message
                 {
-                   Users = new List<string> { "not our user" }
+                   Users = new List<User> { new User { Id = "not our user" } }
                 },
                 new Message
                 {
-                   Users = new List<string> { id }
+                   Users = new List<User> { new User { Id = id } }
                 }
             };
 
@@ -194,7 +199,7 @@ namespace PrayCloud.Tests.Handlers
 
             var result = handler.GetMessagesForUser( id );
 
-            CollectionAssert.AreEquivalent( messages.Where( a => a.Users.Any( b => b == id ) ).ToList(),
+            CollectionAssert.AreEquivalent( messages.Where( a => a.Users.Any( b => b.Id == id ) ).ToList(),
                                             result.ToList() );
         }
     }

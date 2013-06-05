@@ -3,28 +3,24 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+
 namespace PrayCloud
 {
     public class MemoryRepository : IRepository
     {
         private Dictionary<string, object> data = new Dictionary<string, object>();
 
-        public void Delete<T>( string id )
+        public void Delete<T>( string id ) where T : class
         {
             this.data.Remove( id );
         }
 
-        public IQueryable<T> Find<T>()
+        public IQueryable<T> Find<T>() where T : class
         {
             return (IQueryable<T>) this.data.Values.AsQueryable();
         }
 
-        public IEnumerable<U> MapReduce<T, U>( string map, string reduce )
-        {
-            throw new NotImplementedException( "Yeah... memory repo doesn't have map reduce" );
-        }
-
-        public T Save<T>( T entity )
+        public T Save<T>( T entity ) where T : class
         {
             var idProperty = entity.GetType().GetProperty( "Id" );
 

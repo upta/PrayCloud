@@ -18,12 +18,12 @@ namespace PrayCloud
             this.db = new MongoClient( connectionString ).GetServer().GetDatabase( database );
         }
 
-        public void Delete<T>( string id )
+        public void Delete<T>( string id ) where T : class
         {
             this.Collection<T>().Remove( Query.EQ( "_id", ObjectId.Parse( id ) ) );
         }
 
-        public IQueryable<T> Find<T>()
+        public IQueryable<T> Find<T>() where T : class
         {
             return this.Collection<T>().AsQueryable<T>();
         }
@@ -35,7 +35,7 @@ namespace PrayCloud
             return result.GetResultsAs<U>();
         }
 
-        public T Save<T>( T entity )
+        public T Save<T>( T entity ) where T : class
         {
             var collection = this.Collection<T>();
             collection.Save( entity );

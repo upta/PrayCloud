@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlTypes;
 using System.Linq;
 using System.Web;
 
@@ -21,7 +22,7 @@ namespace PrayCloud
         {
             var user = new User
             {
-                LastAssigned = DateTime.MinValue
+                LastAssigned = new DateTime( 1753, 1, 1 )
             };
 
             this.repository.Save<User>( user );
