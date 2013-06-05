@@ -28,6 +28,7 @@ namespace PrayCloud
                                        .Take( maxUsers );
 
             message.Users = users.Select( a => a.Id ).ToList();
+            message.Created = DateTime.UtcNow;
             this.repository.Save<Message>( message );
 
             foreach ( var user in users )
@@ -57,8 +58,10 @@ namespace PrayCloud
 
         public IEnumerable<Message> GetMessagesForUser( string id )
         {
-            return this.repository.Find<Message>()
-                                  .Where( a => a.Users.Any( b => b == id ) );
+            var result = this.repository.Find<Message>()
+                                        .Where( a => a.Users.Contains( id ) );
+
+            return result;
         }
     }
 }

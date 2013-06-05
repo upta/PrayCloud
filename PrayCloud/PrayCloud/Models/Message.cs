@@ -19,8 +19,6 @@ namespace PrayCloud
         public string Id { get; set; }
 
         public string Body { get; set; }
-
-        public string MessageId { get; set; }
         
         public List<string> Users { get; set; }
     }

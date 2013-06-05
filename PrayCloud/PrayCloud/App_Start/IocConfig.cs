@@ -19,13 +19,15 @@ namespace PrayCloud
 
             try
             {
-                kernel.Bind<IRepository>().ToConstant( new MongoRepository( ConfigurationManager.ConnectionStrings[ "Mongo" ].ConnectionString, "praycloud" ) );
+                kernel.Bind<IRepository>().ToConstant( new MongoRepository( ConfigurationManager.ConnectionStrings[ "Mongo" ].ConnectionString, "onlypray" ) );
             }
             catch ( Exception ex ) // probably a bad/missing connection string for the mongodb, just use an in-memory store to get running instead
             {
                 kernel.Bind<IRepository>().ToConstant( new MemoryRepository() );
             }
 
+            kernel.Bind<IUserHandler>().To<UserHandler>();
+            kernel.Bind<IMessageHandler>().To<MessageHandler>();
             kernel.Bind<IMappingHandler>().To<AutoMapMappingHandler>();
 
             DependencyResolver.SetResolver( new NinjectMVCDependencyResolver( kernel ) );
